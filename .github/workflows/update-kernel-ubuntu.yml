@@ -120,7 +120,7 @@ jobs:
             sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
           else
             echo "Sem atualiza de versão"
-            echo "SAINDO"
+            echo "SAINDO...."
             false
           fi
 
