@@ -96,19 +96,26 @@ jobs:
           sudo pacman-key --populate archlinux
           sudo pacman -Sy
           
-      # # Tmate ##
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
+      # Tmate ##
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
         
       - name: Update Kernel Version
         shell: bash
         run: |
-          pkgver=$(pacman -Sl | grep linux | grep core | grep -vE "linux-|-linux" | grep -w linux | sort | tail -n1 | cut -d " " -f3 | cut -d "-" -f1 | sed 's/\.arch1//')
-          pkgrel=$(pacman -Sl | grep linux | grep core | grep -vE "linux-|-linux" | grep -w linux | sort | tail -n1 | cut -d " " -f3 | cut -d "-" -f2)
+          pkgverArch=$(pacman -Sl | grep linux | grep core | grep -vE "linux-|-linux" | grep -w linux | sort | tail -n1 | cut -d " " -f3 | cut -d "-" -f1 | sed 's/\.arch1//')
+          pkgrelArch=$(pacman -Sl | grep linux | grep core | grep -vE "linux-|-linux" | grep -w linux | sort | tail -n1 | cut -d " " -f3 | cut -d "-" -f2)
+          kVerArch=${pkgverArch}-${pkgrelArch}
           
-          sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
-          sed -i "s/pkgrel=.*/pkgrel=${pkgrel}/" PKGBUILD
-
+          source PKGBUILD
+          kVerUai=${pkgver}-${pkgrel}
+          
+          if [ "$kVerArch" != "$kVerUai" ];then
+            git clone --branch packages/linux  https://github.com/archlinux/svntogit-packages.git
+            cp -f svntogit-packages/trunk/* .
+            sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
+            sed -i "s/pkgrel=.*/pkgrel=${pkgrel}/" PKGBUILD
+          fi
 
       - name: Update github
         run: |
