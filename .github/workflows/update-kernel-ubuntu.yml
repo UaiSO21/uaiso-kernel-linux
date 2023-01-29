@@ -94,9 +94,9 @@ jobs:
           sudo pacman-key --populate archlinux
           sudo pacman -Sy
           
-      # Tmate ##
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # # Tmate ##
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
         
       - name: Update Kernel Version
         shell: bash
@@ -126,6 +126,8 @@ jobs:
             # sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
             # sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
           # else
+            curl -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" \
+            -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
           #   echo "Sem atualiza de versão"
           #   echo "SAINDO...."
           #   false
