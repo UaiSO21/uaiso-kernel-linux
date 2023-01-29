@@ -78,9 +78,7 @@ jobs:
           Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
           Server = https://mirror.leaseweb.net/archlinux/$repo/os/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
       
-      - name: install keyrings
-        shell: bash
-        run: |
+          #Install keyrings
           sudo install -dm755 /usr/share/pacman/keyrings/
           mkdir -p archlinux-keyring
           pushd archlinux-keyring
@@ -112,9 +110,14 @@ jobs:
           
           if [ "$kVerArch" != "$kVerUai" ];then
             git clone --branch packages/linux  https://github.com/archlinux/svntogit-packages.git
-            cp -f svntogit-packages/trunk/* .
-            sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
-            sed -i "s/pkgrel=.*/pkgrel=${pkgrel}/" PKGBUILD
+            cp -rf svntogit-packages/trunk/* .
+            rm -r svntogit-packages
+            sed -i "s/pkgbase=.*/pkgbase=uaiso-kernel-linux/" PKGBUILD
+            sed -i "s/pkgver=.*/pkgver=${pkgverArch}/" PKGBUILD
+            sed -i "s/pkgrel=.*/pkgrel=${pkgrelArch}/" PKGBUILD
+            sed -i "s/_srctag=.*/_srctag=v${pkgver}-arch${pkgrel}/" PKGBUILD
+            sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
+            sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
           fi
 
       - name: Update github
