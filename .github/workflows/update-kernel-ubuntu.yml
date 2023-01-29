@@ -119,6 +119,8 @@ jobs:
             sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
             sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
           else
+            echo "Sem atualiza de versão"
+            echo "SAINDO"
             SIGINT/Ctrl-C
           fi
 
