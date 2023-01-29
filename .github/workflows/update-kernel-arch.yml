@@ -23,7 +23,9 @@ jobs:
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         
-      # - name: Update Kernel Version
-      #   shell: bash
-      #   run: |
+      - name: Update Kernel Version
+        shell: bash
+        run: |
+          rm -r *
+          
           

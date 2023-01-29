@@ -1,0 +1,130 @@
+name: Update Kernel - CI/CD-Ubuntu
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+  
+  # schedule:
+  #   - cron:  '30 2 * * *'
+  
+  # push:
+    #branches: [ "master", "main", "*" ]
+    # branches: [ "*" ]
+  #pull_request:
+    #branches: [ "master", "main", "*" ]
+    #branches: [ "*" ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Install Translator Dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+          build-essential \
+          cmake \
+          fakeroot \
+          git \
+          libarchive-dev \
+          libarchive-tools \
+          libcurl4-openssl-dev \
+          libgpgme-dev \
+          libssl-dev \
+          zip \
+          python3-pip
+          sudo pip3 install meson
+          sudo pip3 install ninja
+          
+      - name: install pacman
+        shell: bash
+        env:
+          PACMAN_VERSION: 6.0.1
+        run: |
+          sudo git clone --depth 1 https://gitlab.manjaro.org/packages/core/pacman.git
+          pushd pacman
+          sudo wget https://sources.archlinux.org/other/pacman/pacman-${PACMAN_VERSION}.tar.xz
+          sudo tar -xvf pacman-${PACMAN_VERSION}.tar.xz
+          pushd pacman-${PACMAN_VERSION}
+          sudo patch -p1 -i ../pacman-sync-first-option.patch
+          sudo meson --prefix=/usr \
+                      --buildtype=plain \
+                      -Ddoc=disabled \
+                      -Ddoxygen=enabled \
+                      -Dscriptlet-shell=/usr/bin/bash \
+                      -Dldconfig=/usr/bin/ldconfig \
+                      build
+          sudo meson compile -C build
+          sudo meson install -C build
+          popd
+          sudo install -m644 pacman.conf /etc/pacman.conf
+          sudo install -m644 makepkg.conf /etc/
+          sudo mkdir -p /etc/pacman.d
+          sudo touch /etc/pacman.d/mirrorlist
+          popd
+          sudo rm -rf pacman
+          
+          #Mirrorlist
+          echo 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
+          Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+          Server = https://mirror.leaseweb.net/archlinux/$repo/os/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
+      
+      - name: install keyrings
+        shell: bash
+        run: |
+          sudo install -dm755 /usr/share/pacman/keyrings/
+          mkdir -p archlinux-keyring
+          pushd archlinux-keyring
+            wget https://archlinux.org/packages/core/any/archlinux-keyring/download -O /tmp/archlinux-keyring.tar.zst
+            tar --use-compress-program=unzstd --strip-components=4 --wildcards -xvf /tmp/archlinux-keyring.tar.zst usr/share/pacman/keyrings/*
+            sudo install -m0644 archlinux.gpg /usr/share/pacman/keyrings/
+            sudo install -m0644 archlinux-trusted /usr/share/pacman/keyrings/
+            sudo install -m0644 archlinux-revoked /usr/share/pacman/keyrings/
+          popd
+          sudo rm -rf archlinux-keyring
+                  
+          sudo pacman-key --init
+          sudo pacman-key --populate archlinux
+          
+      # Tmate ##
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        
+      - name: Update Kernel Version
+        shell: bash
+        run: |
+          pkgver=$(pacman -Sl | grep linux[0-9] | grep core | grep -vE "rc|headers" | sort | tail -n1 | cut -d " " -f3 | cut -d "-" -f1)
+          kernelver=$(pacman -Sl | grep linux[0-9] | grep core | grep -vE "rc|headers" | sort | tail -n1 | cut -d " " -f2 | sed 's/linux//')
+          pkgrel=$(pacman -Sl | grep linux[0-9] | grep core | grep -vE "rc|headers" | sort | tail -n1 | cut -d " " -f3 | cut -d "-" -f2)
+          
+          sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
+          sed -i "s/kernelver=.*/kernelver=${kernelver}/" PKGBUILD
+          sed -i "s/pkgrel=.*/pkgrel=${pkgrel}/" PKGBUILD
+
+
+      - name: Update github
+        run: |
+          git add --all
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          if [ -n "$(git commit -m "new version" -a | grep "nothing to commit")" ];then exit 0; fi
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+      - name: Send Hooks BigLinux Build Package
+        shell: bash
+        run: |
+          curl -X POST -H "Accept: application/json" -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" --data '{"event_type": "${{ github.repository }}", "client_payload": { "branch": "${{ github.ref_name }}", "url": "https://github.com/${{ github.repository }}", "version": "1.2.3"}}' https://api.github.com/repos/BigLinux-Package-Build/build-package/dispatches
