@@ -121,7 +121,7 @@ jobs:
           else
             echo "Sem atualiza de versão"
             echo "SAINDO"
-            SIGINT/Ctrl-C
+            false
           fi
 
       - name: Update github
