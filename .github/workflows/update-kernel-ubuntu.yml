@@ -118,6 +118,8 @@ jobs:
             sed -i "s/_srctag=.*/_srctag=v${pkgver}-arch${pkgrel}/" PKGBUILD
             sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
             sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
+          else
+            SIGINT/Ctrl-C
           fi
 
       - name: Update github
