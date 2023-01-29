@@ -126,11 +126,10 @@ jobs:
             # sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
             # sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
           # else
-            curl -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" \
-            -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
           #   echo "Sem atualiza de versão"
           #   echo "SAINDO...."
-          #   false
+          #    curl -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" \
+          #    -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
           # fi
 
       - name: Update github
