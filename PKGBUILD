@@ -1,11 +1,11 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
-pkgbase=linux
+pkgbase=uaiso-kernel-linux
 pkgver=6.1.8
 pkgrel=1
 pkgdesc='Linux'
-_srctag=v${pkgver%.*}-${pkgver##*.}
-url="https://github.com/archlinux/linux/commits/$_srctag"
+_srctag=v6.1.8-arch1
+url="https://github.com/UaiSO21/uaiso-kernel-linux"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
@@ -14,7 +14,7 @@ makedepends=(
   git
 )
 options=('!strip')
-_srcname=archlinux-linux
+_srcname=uaiso-kernel-linux
 source=(
   "$_srcname::git+https://github.com/archlinux/linux?signed#tag=$_srctag"
   config         # the main kernel config file
