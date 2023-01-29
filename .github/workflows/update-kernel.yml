@@ -1,0 +1,29 @@
+name: Update-Kernel
+
+on:
+  # repository_dispatch:
+    # types:
+    #   - '*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: 
+      image: archlinux:latest
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        shell: bash
+        run: |
+          pacman -Syu --noconfirm --needed sudo nano openssh git github-cli zip
+          
+      # # Tmate ##
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        
+      # - name: Update Kernel Version
+      #   shell: bash
+      #   run: |
+          
