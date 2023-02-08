@@ -114,9 +114,9 @@ jobs:
             # rm -r svntogit-packages
             
             #gitLAB
-            git clone https://gitlab.archlinux.org/bot-test/packages/linux.git
-            cp -rf linux/* .
-            rm -r linux
+            # git clone https://gitlab.archlinux.org/bot-test/packages/linux.git
+            # cp -rf linux/* .
+            # rm -r linux
             
             # sed -i "s/pkgbase=.*/pkgbase=uaiso-kernel-linux/" PKGBUILD
             # sed -i "s/pkgver=.*/pkgver=${pkgverArch}/" PKGBUILD
