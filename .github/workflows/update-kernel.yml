@@ -9,9 +9,6 @@ on:
   # push:
     #branches: [ "master", "main", "*" ]
     # branches: [ "*" ]
-  #pull_request:
-    #branches: [ "master", "main", "*" ]
-    #branches: [ "*" ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -126,7 +123,7 @@ jobs:
             sed -i "s/pkgbase=.*/pkgbase=uaiso-kernel-linux/" PKGBUILD
             sed -i "s/pkgver=.*/pkgver=${pkgverArch}/" PKGBUILD
             sed -i "s/pkgrel=.*/pkgrel=${pkgrelArch}/" PKGBUILD
-            sed -i "s/_srctag=.*/_srctag=v${pkgver}-arch${pkgrel}/" PKGBUILD
+            sed -i "s/_srctag=.*/_srctag=v${pkgverArch}-arch${pkgrel}/" PKGBUILD
             sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
             sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
           else

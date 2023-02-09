@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=uaiso-kernel-linux
-pkgver=6.1.10
+pkgver=6.1.9
 pkgrel=1
 pkgdesc='Linux'
 _srctag=v6.1.10.arch1-arch1
