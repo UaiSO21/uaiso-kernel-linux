@@ -107,7 +107,7 @@ jobs:
           source PKGBUILD
           kVerUai=${pkgver}-${pkgrel}
           
-          # if [ "$kVerArch" != "$kVerUai" ];then
+          if [ "$kVerArch" != "$kVerUai" ];then
             #gitHUB
             # git clone --branch packages/linux  https://github.com/archlinux/svntogit-packages.git
             # cp -rf svntogit-packages/trunk/* .
@@ -118,19 +118,24 @@ jobs:
             # cp -rf linux/* .
             # rm -r linux
             
-            # sed -i "s/pkgbase=.*/pkgbase=uaiso-kernel-linux/" PKGBUILD
-            # sed -i "s/pkgver=.*/pkgver=${pkgverArch}/" PKGBUILD
-            # sed -i "s/pkgrel=.*/pkgrel=${pkgrelArch}/" PKGBUILD
-            # sed -i "s/_srctag=.*/_srctag=v${pkgver}-arch${pkgrel}/" PKGBUILD
-            # sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
-            # sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
-          # else
-          #   echo "Sem atualiza de versão"
-          #   echo "SAINDO...."
-          #    curl -s -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" \
-          #    -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
-          #    sleep infinity
-          # fi
+            #gitHUB
+            git clone -b packages/linux --single-branch https://github.com/archlinux/svntogit-packages.git
+            cp -rf svntogit-packages/trunk/* .
+            rm -r svntogit-packages
+            
+            sed -i "s/pkgbase=.*/pkgbase=uaiso-kernel-linux/" PKGBUILD
+            sed -i "s/pkgver=.*/pkgver=${pkgverArch}/" PKGBUILD
+            sed -i "s/pkgrel=.*/pkgrel=${pkgrelArch}/" PKGBUILD
+            sed -i "s/_srctag=.*/_srctag=v${pkgver}-arch${pkgrel}/" PKGBUILD
+            sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
+            sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
+          else
+            echo "Sem atualiza de versão"
+            echo "SAINDO...."
+             curl -s -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" \
+             -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
+             sleep infinity
+          fi
 
       - name: Update github
         run: |
