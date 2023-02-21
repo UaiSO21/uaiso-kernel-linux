@@ -1,10 +1,10 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=uaiso-kernel-linux
-pkgver=6.1.10
+pkgver=6.1.12
 pkgrel=1
 pkgdesc='Linux'
-_srctag=v6.1.10-arch1
+_srctag=v6.1.12-arch1
 url="https://github.com/UaiSO21/uaiso-kernel-linux"
 arch=(x86_64)
 license=(GPL2)
@@ -26,7 +26,7 @@ validpgpkeys=(
   'C7E7849466FE2358343588377258734B41C31549'  # David Runge <dvzrv@archlinux.org>
 )
 sha256sums=('SKIP'
-            '2851b2b8475f1afae7d4f82b58cf7563adf99e39ebe2c1ffce2dd002e2f91b39')
+            'a80dfd64eca60673422052ac4d1444b0f9495a588c2595d413fd0687f3786586')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
