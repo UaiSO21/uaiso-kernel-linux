@@ -1,10 +1,10 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=uaiso-kernel-linux
-pkgver=6.2.1
+pkgver=6.2.2
 pkgrel=1
 pkgdesc='Linux'
-_srctag=v6.2.1-arch1
+_srctag=v6.2.2-arch1
 url="https://github.com/UaiSO21/uaiso-kernel-linux"
 arch=(x86_64)
 license=(GPL2)
