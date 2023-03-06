@@ -126,6 +126,7 @@ jobs:
             sed -i "s/_srctag=.*/_srctag=v${pkgverArch}-arch${pkgrel}/" PKGBUILD
             sed -i 's|url=.*|url="https://github.com/UaiSO21/uaiso-kernel-linux"|' PKGBUILD
             sed -i "s/_srcname=.*/_srcname=uaiso-kernel-linux/" PKGBUILD
+            # sed -i 's/make/make -j32/' PKGBUILD
           else
             echo "Sem atualiza de versão"
             echo "SAINDO...."
@@ -147,7 +148,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
 
-      - name: Send Hooks to Package Build
-        shell: bash
-        run: |
-          curl -X POST -H "Accept: application/json" -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" --data '{"event_type": "${{ github.repository }}", "client_payload": { "branch": "${{ github.ref_name }}", "url": "https://github.com/${{ github.repository }}", "version": "1.2.3"}}' https://api.github.com/repos/UaiSO21/uaiso-packages-build/dispatches
+      # - name: Send Hooks to Package Build
+      #   shell: bash
+      #   run: |
+      #     curl -X POST -H "Accept: application/json" -H "Authorization: token ${{ secrets.WEBHOOK_TOKEN }}" --data '{"event_type": "${{ github.repository }}", "client_payload": { "branch": "${{ github.ref_name }}", "url": "https://github.com/${{ github.repository }}", "version": "1.2.3"}}' https://api.github.com/repos/UaiSO21/uaiso-packages-build/dispatches
