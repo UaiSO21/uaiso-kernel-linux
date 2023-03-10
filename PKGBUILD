@@ -1,10 +1,10 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=uaiso-kernel-linux
-pkgver=6.2.2
+pkgver=6.2.2.arch2
 pkgrel=1
 pkgdesc='Linux'
-_srctag=v6.2.2-arch1
+_srctag=v6.2.2.arch2-arch1
 url="https://github.com/UaiSO21/uaiso-kernel-linux"
 arch=(x86_64)
 license=(GPL2)
@@ -26,7 +26,7 @@ validpgpkeys=(
   'C7E7849466FE2358343588377258734B41C31549'  # David Runge <dvzrv@archlinux.org>
 )
 sha256sums=('SKIP'
-            'f35bb39db7324a45e78e6c75c1a60f117fea3f7d0df9f4a32bed411751d6ffea')
+            'c92207f87f806209da2bda0a2044872fdf22fce9a45cf31d3579fdfedde8c17c')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -84,7 +84,7 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make -j2 --max-load=8G INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
